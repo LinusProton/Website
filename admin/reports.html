@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Reports — LUXE Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body data-page="reports">
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+    <main class="content">
+      <div class="toolbar-row">
+        <select class="select-input" id="reportRange">
+          <option value="7">Last 7 Days</option>
+          <option value="30" selected>Last 30 Days</option>
+          <option value="90">Last 90 Days</option>
+        </select>
+        <button class="btn btn-outline btn-sm" id="exportBtn">Export CSV</button>
+      </div>
+
+      <div class="grid grid-4" id="reportKpis" style="margin:1.2rem 0;"></div>
+
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:1.4rem;align-items:start;">
+        <div class="admin-card">
+          <h4 style="margin-top:0;">Sales by Category</h4>
+          <div id="catBreakdown"></div>
+        </div>
+        <div class="admin-card">
+          <h4 style="margin-top:0;">Payment Method Split</h4>
+          <div id="paymentBreakdown"></div>
+        </div>
+      </div>
+
+      <div class="admin-card section">
+        <h4 style="margin-top:0;">Product Performance</h4>
+        <table class="admin-table">
+          <thead><tr><th>Product</th><th>Units Sold</th><th>Revenue</th></tr></thead>
+          <tbody id="productPerfTable"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../js/data.js"></script>
+<script src="../js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/admin-layout.js"></script>
+<script src="../js/admin.js"></script>
+<script>
+let RP_ORDERS = [], RP_PRODUCTS = [];
+function computeReport() {
+  const days = +document.getElementById("reportRange").value;
+  const cutoff = Date.now() - days * 86400000;
+  const orders = RP_ORDERS.filter(o => o.createdAt >= cutoff && o.status !== "cancelled");
+  const revenue = orders.reduce((s, o) => s + o.total, 0);
+  const tax = orders.reduce((s, o) => s + o.tax, 0);
+  const aov = orders.length ? revenue / orders.length : 0;
+
+  document.getElementById("reportKpis").innerHTML = `
+    <div class="kpi-card"><div class="lbl">Revenue</div><div class="val">${money(revenue)}</div></div>
+    <div class="kpi-card"><div class="lbl">Orders</div><div class="val">${orders.length}</div></div>
+    <div class="kpi-card"><div class="lbl">Avg. Order Value</div><div class="val">${money(Math.round(aov))}</div></div>
+    <div class="kpi-card"><div class="lbl">Tax Collected</div><div class="val">${money(Math.round(tax))}</div></div>
+  `;
+
+  const catRevenue = {};
+  orders.forEach(o => o.items.forEach(i => {
+    const p = RP_PRODUCTS.find(x => x.id === i.productId);
+    const cat = p?.category || "other";
+    catRevenue[cat] = (catRevenue[cat] || 0) + i.price * i.qty;
+  }));
+  const maxCat = Math.max(...Object.values(catRevenue), 1);
+  document.getElementById("catBreakdown").innerHTML = Object.entries(catRevenue).sort((a, b) => b[1] - a[1]).map(([cat, rev]) => `
+    <div style="margin-bottom:.6rem;">
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.2rem;"><span style="text-transform:capitalize;">${cat}</span><span>${money(rev)}</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${(rev / maxCat) * 100}%"></div></div>
+    </div>`).join("") || "<p>No sales in this period.</p>";
+
+  const payRevenue = {};
+  orders.forEach(o => payRevenue[o.paymentMethod] = (payRevenue[o.paymentMethod] || 0) + o.total);
+  const maxPay = Math.max(...Object.values(payRevenue), 1);
+  document.getElementById("paymentBreakdown").innerHTML = Object.entries(payRevenue).sort((a, b) => b[1] - a[1]).map(([m, rev]) => `
+    <div style="margin-bottom:.6rem;">
+      <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.2rem;"><span style="text-transform:capitalize;">${m}</span><span>${money(rev)}</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${(rev / maxPay) * 100}%"></div></div>
+    </div>`).join("") || "<p>No sales in this period.</p>";
+
+  const salesCount = {};
+  orders.forEach(o => o.items.forEach(i => {
+    if (!salesCount[i.productId]) salesCount[i.productId] = { qty: 0, rev: 0 };
+    salesCount[i.productId].qty += i.qty;
+    salesCount[i.productId].rev += i.price * i.qty;
+  }));
+  const perf = Object.entries(salesCount).sort((a, b) => b[1].rev - a[1].rev).slice(0, 10)
+    .map(([id, d]) => ({ product: RP_PRODUCTS.find(p => p.id === id), ...d })).filter(x => x.product);
+  document.getElementById("productPerfTable").innerHTML = perf.map(p => `
+    <tr><td>${p.product.name}</td><td>${p.qty}</td><td>${money(p.rev)}</td></tr>`).join("") || `<tr><td colspan="3" style="text-align:center;padding:1.5rem;">No sales data yet.</td></tr>`;
+}
+document.getElementById("reportRange").addEventListener("change", computeReport);
+document.getElementById("exportBtn").addEventListener("click", () => Toast.show("CSV export would download here."));
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!(await guardAdmin())) return;
+  renderAdminLayout("Reports");
+  [RP_ORDERS, RP_PRODUCTS] = await Promise.all([LuxeDB.getOrders(), LuxeDB.getProducts()]);
+  computeReport();
+});
+</script>
+</body>
+</html>

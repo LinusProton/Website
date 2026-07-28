@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Login — LUXE MARKET</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body style="background:var(--navy-950);">
+<main style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem;">
+  <div class="auth-wrap">
+    <div class="eyebrow" style="justify-content:center;">Admin Panel</div>
+    <h2 style="text-align:center;">LUXE MARKET Admin</h2>
+    <form id="adminLoginForm">
+      <div class="field"><label>Email</label><input type="email" id="adminEmail" value="admin@luxe.test" required/></div>
+      <div class="field"><label>Password</label><input type="password" id="adminPassword" value="admin123" required/></div>
+      <div id="adminLoginError" style="color:var(--rose);font-size:.8rem;margin-bottom:.6rem;"></div>
+      <button class="btn btn-gold btn-block" type="submit">Login to Dashboard</button>
+    </form>
+    <p style="text-align:center;font-size:.78rem;color:var(--text-mute);margin-top:1rem;">Demo credentials are pre-filled. In production, remove demo accounts and manage admins via the <code>admins</code> Firestore collection.</p>
+    <p style="text-align:center;font-size:.82rem;"><a href="../index.html" style="color:var(--gold-dim);">← Back to storefront</a></p>
+  </div>
+</main>
+<script src="../js/data.js"></script>
+<script src="../js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const err = document.getElementById("adminLoginError");
+  err.textContent = "";
+  try {
+    await LuxeAuth.login(document.getElementById("adminEmail").value, document.getElementById("adminPassword").value);
+    const isAdmin = await LuxeAuth.isAdmin();
+    if (!isAdmin) { err.textContent = "This account does not have admin access."; return; }
+    window.location.href = "index.html";
+  } catch (ex) { err.textContent = ex.message; }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Customers — LUXE Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body data-page="customers">
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+    <main class="content">
+      <div class="toolbar-row">
+        <input class="select-input" id="custSearch" placeholder="Search customers by name or email…" style="max-width:320px;"/>
+        <span id="custCount" style="font-size:.85rem;color:var(--text-mute);"></span>
+      </div>
+      <div class="admin-card" style="overflow-x:auto;">
+        <table class="admin-table" style="min-width:800px;">
+          <thead><tr><th>Customer</th><th>Email</th><th>Orders</th><th>Total Spent</th><th>Loyalty Points</th><th>Group</th></tr></thead>
+          <tbody id="customersTableBody"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../js/data.js"></script>
+<script src="../js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/admin-layout.js"></script>
+<script src="../js/admin.js"></script>
+<script>
+let AC_CUSTOMERS = [], AC_ORDERS = [];
+function renderCustomers() {
+  const search = document.getElementById("custSearch").value.toLowerCase();
+  let rows = AC_CUSTOMERS.filter(c => c.email !== "admin@luxe.test");
+  if (search) rows = rows.filter(c => (c.name || "").toLowerCase().includes(search) || c.email.toLowerCase().includes(search));
+  document.getElementById("custCount").textContent = `${rows.length} customers`;
+  document.getElementById("customersTableBody").innerHTML = rows.map(c => {
+    const custOrders = AC_ORDERS.filter(o => o.customerEmail === c.email || o.uid === c.uid);
+    const spent = custOrders.reduce((s, o) => s + o.total, 0);
+    const group = spent > 20000 ? "VIP" : spent > 5000 ? "Regular" : "New";
+    return `<tr>
+      <td>${c.name || "—"}</td><td>${c.email}</td><td>${custOrders.length}</td>
+      <td>${money(spent)}</td><td>${c.loyaltyPoints || 0}</td>
+      <td><span class="tag-chip">${group}</span></td>
+    </tr>`;
+  }).join("") || `<tr><td colspan="6" style="text-align:center;padding:2rem;">No customers found.</td></tr>`;
+}
+document.getElementById("custSearch").addEventListener("input", renderCustomers);
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!(await guardAdmin())) return;
+  renderAdminLayout("Customers");
+  [AC_CUSTOMERS, AC_ORDERS] = await Promise.all([LuxeDB.getCustomers(), LuxeDB.getOrders()]);
+  renderCustomers();
+});
+</script>
+</body>
+</html>

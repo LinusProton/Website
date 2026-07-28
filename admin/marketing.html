@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Marketing — LUXE Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body data-page="marketing">
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+    <main class="content">
+
+      <div class="admin-card">
+        <div class="toolbar-row" style="margin-bottom:.6rem;">
+          <h4 style="margin:0;">Coupons &amp; Discount Codes</h4>
+          <button class="btn btn-gold btn-sm" id="addCouponBtn">+ New Coupon</button>
+        </div>
+        <table class="admin-table">
+          <thead><tr><th>Code</th><th>Type</th><th>Value</th><th>Status</th><th></th></tr></thead>
+          <tbody id="couponsTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="grid grid-2 section" style="align-items:start;">
+        <div class="admin-card">
+          <h4 style="margin-top:0;">Homepage Banners</h4>
+          <div id="bannerList"></div>
+          <button class="btn btn-outline btn-sm btn-block" style="margin-top:.8rem;">+ Add Banner</button>
+        </div>
+        <div class="admin-card">
+          <h4 style="margin-top:0;">Bundle &amp; BOGO Offers</h4>
+          <div class="info-card"><strong>Buy 2 Get 1 Free</strong> — Beauty category<br/><span style="font-size:.78rem;color:var(--text-mute);">Active until 31 Jul 2026</span></div>
+          <div class="info-card"><strong>Bundle: Watch + Strap</strong> — save KSh 500<br/><span style="font-size:.78rem;color:var(--text-mute);">Active</span></div>
+          <button class="btn btn-outline btn-sm btn-block">+ Create Offer</button>
+        </div>
+      </div>
+
+      <div class="grid grid-2 section" style="align-items:start;">
+        <div class="admin-card">
+          <h4 style="margin-top:0;">Newsletter</h4>
+          <p style="font-size:.85rem;">1,204 subscribers</p>
+          <div class="field"><label>Campaign Subject</label><input placeholder="e.g. Flash sale ends tonight!"/></div>
+          <div class="field"><label>Message</label><textarea rows="3" placeholder="Campaign content…"></textarea></div>
+          <button class="btn btn-dark btn-sm">Send Campaign</button>
+        </div>
+        <div class="admin-card">
+          <h4 style="margin-top:0;">Push Notifications</h4>
+          <p style="font-size:.85rem;">Send an app/browser push notification to customers.</p>
+          <div class="field"><label>Notification Text</label><input placeholder="e.g. Your order has shipped!"/></div>
+          <button class="btn btn-dark btn-sm">Send Push Notification</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="couponModal">
+  <div class="modal-box">
+    <div class="modal-head"><h4>New Coupon</h4><button class="btn btn-outline btn-sm" id="closeCouponModal">Close</button></div>
+    <form id="couponForm">
+      <div class="field"><label>Code</label><input id="cCode" required style="text-transform:uppercase;"/></div>
+      <div class="field"><label>Type</label>
+        <select id="cType" class="select-input" style="width:100%;">
+          <option value="percent">Percentage Off</option>
+          <option value="flat">Flat Amount Off (KSh)</option>
+          <option value="shipping">Free Shipping</option>
+        </select>
+      </div>
+      <div class="field"><label>Value</label><input type="number" id="cValue" value="10"/></div>
+      <button type="submit" class="btn btn-dark btn-block">Create Coupon</button>
+    </form>
+  </div>
+</div>
+
+<script src="../js/data.js"></script>
+<script src="../js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/admin-layout.js"></script>
+<script src="../js/admin.js"></script>
+<script>
+function renderCoupons() {
+  const coupons = LS.get("luxe_coupons", []);
+  document.getElementById("couponsTableBody").innerHTML = coupons.map(c => `
+    <tr>
+      <td><strong>${c.code}</strong></td>
+      <td style="text-transform:capitalize;">${c.type}</td>
+      <td>${c.type === "percent" ? c.value + "%" : c.type === "flat" ? money(c.value) : "Free Shipping"}</td>
+      <td>${c.active ? '<span class="status-pill status-delivered">Active</span>' : '<span class="status-pill status-cancelled">Disabled</span>'}</td>
+      <td><button class="btn btn-outline btn-sm toggle-coupon" data-code="${c.code}">${c.active ? "Disable" : "Enable"}</button></td>
+    </tr>`).join("");
+  document.querySelectorAll(".toggle-coupon").forEach(b => b.addEventListener("click", () => {
+    const coupons = LS.get("luxe_coupons", []);
+    const c = coupons.find(x => x.code === b.dataset.code);
+    c.active = !c.active;
+    LS.set("luxe_coupons", coupons);
+    renderCoupons();
+  }));
+}
+function renderBanners() {
+  const banners = [
+    { title: "New Season Hero", loc: "Homepage Hero Slide 1", active: true },
+    { title: "Flash Sale Beauty", loc: "Homepage Promo Banner", active: true },
+    { title: "Gifting Campaign", loc: "Homepage Hero Slide 3", active: false }
+  ];
+  document.getElementById("bannerList").innerHTML = banners.map(b => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid #f2eee0;font-size:.85rem;">
+      <span>${b.title}<div style="font-size:.72rem;color:var(--text-mute);">${b.loc}</div></span>
+      <span class="status-pill ${b.active ? "status-delivered" : "status-cancelled"}">${b.active ? "Live" : "Off"}</span>
+    </div>`).join("");
+}
+document.getElementById("addCouponBtn").addEventListener("click", () => document.getElementById("couponModal").classList.add("open"));
+document.getElementById("closeCouponModal").addEventListener("click", () => document.getElementById("couponModal").classList.remove("open"));
+document.getElementById("couponForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const coupons = LS.get("luxe_coupons", []);
+  coupons.push({ code: document.getElementById("cCode").value.toUpperCase(), type: document.getElementById("cType").value, value: +document.getElementById("cValue").value, active: true });
+  LS.set("luxe_coupons", coupons);
+  document.getElementById("couponModal").classList.remove("open");
+  Toast.show("Coupon created");
+  renderCoupons();
+});
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!(await guardAdmin())) return;
+  renderAdminLayout("Marketing");
+  renderCoupons(); renderBanners();
+});
+</script>
+</body>
+</html>

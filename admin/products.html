@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Products — LUXE Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body data-page="products">
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+    <main class="content">
+      <div class="toolbar-row">
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+          <input class="select-input" id="prodSearch" placeholder="Search products…"/>
+          <select class="select-input" id="prodCatFilter"><option value="">All Categories</option></select>
+        </div>
+        <button class="btn btn-gold" id="addProductBtn">+ Add Product</button>
+      </div>
+
+      <div class="admin-card" style="overflow-x:auto;">
+        <table class="admin-table" style="min-width:900px;">
+          <thead><tr><th></th><th>Product</th><th>SKU</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="productsTableBody"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="productModal">
+  <div class="modal-box">
+    <div class="modal-head"><h4 id="modalTitle">Add Product</h4><button class="btn btn-outline btn-sm" id="closeProductModal">Close</button></div>
+    <form id="productForm">
+      <input type="hidden" id="pId"/>
+      <div class="form-grid">
+        <div class="field form-grid full"><label>Product Name</label><input id="pName" required/></div>
+        <div class="field"><label>SKU</label><input id="pSku" required/></div>
+        <div class="field"><label>Brand</label><input id="pBrand" required/></div>
+        <div class="field"><label>Category</label>
+          <select id="pCategory" class="select-input" style="width:100%;" required></select>
+        </div>
+        <div class="field"><label>Price (KSh)</label><input type="number" id="pPrice" required/></div>
+        <div class="field"><label>Discount % (optional)</label><input type="number" id="pDiscount" value="0"/></div>
+        <div class="field"><label>Stock Quantity</label><input type="number" id="pStock" required/></div>
+        <div class="field"><label>Image seed (demo)</label><input id="pImageSeed" placeholder="e.g. red-sneaker"/></div>
+        <div class="field form-grid full"><label>Description</label><textarea id="pDescription" rows="3"></textarea></div>
+      </div>
+      <label style="display:flex;gap:.5rem;font-size:.82rem;margin-bottom:.6rem;"><input type="checkbox" id="pFeatured"/> Featured product</label>
+      <button type="submit" class="btn btn-dark btn-block">Save Product</button>
+    </form>
+  </div>
+</div>
+
+<script src="../js/data.js"></script>
+<script src="../js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/admin-layout.js"></script>
+<script src="../js/admin.js"></script>
+<script src="../js/admin-products.js"></script>
+</body>
+</html>

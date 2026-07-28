@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Inventory — LUXE Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body data-page="inventory">
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+    <main class="content">
+      <div class="grid grid-4" style="margin-bottom:1.4rem;">
+        <div class="kpi-card"><div class="lbl">Total SKUs</div><div class="val" id="kpiSkus">0</div></div>
+        <div class="kpi-card"><div class="lbl">In Stock</div><div class="val" id="kpiInStock">0</div></div>
+        <div class="kpi-card"><div class="lbl">Low Stock</div><div class="val" id="kpiLow">0</div></div>
+        <div class="kpi-card"><div class="lbl">Out of Stock</div><div class="val" id="kpiOut">0</div></div>
+      </div>
+
+      <div class="toolbar-row">
+        <input class="select-input" id="invSearch" placeholder="Search SKU or product name…" style="max-width:320px;"/>
+        <select class="select-input" id="invFilter">
+          <option value="">All Stock Levels</option>
+          <option value="low">Low Stock (&lt;8)</option>
+          <option value="out">Out of Stock</option>
+        </select>
+      </div>
+
+      <div class="admin-card" style="overflow-x:auto;">
+        <table class="admin-table" style="min-width:800px;">
+          <thead><tr><th>Product</th><th>SKU</th><th>Barcode</th><th>Stock</th><th>Adjust</th></tr></thead>
+          <tbody id="invTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="admin-card section">
+        <h4 style="margin-top:0;">Purchase Orders</h4>
+        <table class="admin-table">
+          <thead><tr><th>PO #</th><th>Supplier</th><th>Items</th><th>Status</th><th>Expected</th></tr></thead>
+          <tbody>
+            <tr><td>PO-1042</td><td>Northline Textiles Ltd.</td><td>120 units</td><td><span class="status-pill status-processing">In Transit</span></td><td>02 Aug 2026</td></tr>
+            <tr><td>PO-1041</td><td>Aurelia Distribution</td><td>60 units</td><td><span class="status-pill status-delivered">Received</span></td><td>18 Jul 2026</td></tr>
+            <tr><td>PO-1040</td><td>Marbled Home Co.</td><td>200 units</td><td><span class="status-pill status-pending">Ordered</span></td><td>10 Aug 2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../js/data.js"></script>
+<script src="../js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/admin-layout.js"></script>
+<script src="../js/admin.js"></script>
+<script>
+let INV_PRODUCTS = [];
+function renderInventory() {
+  const search = document.getElementById("invSearch").value.toLowerCase();
+  const filter = document.getElementById("invFilter").value;
+  let rows = INV_PRODUCTS;
+  if (search) rows = rows.filter(p => p.name.toLowerCase().includes(search) || p.sku.toLowerCase().includes(search));
+  if (filter === "low") rows = rows.filter(p => p.stock > 0 && p.stock < 8);
+  if (filter === "out") rows = rows.filter(p => p.stock === 0);
+
+  document.getElementById("invTableBody").innerHTML = rows.map(p => `
+    <tr>
+      <td style="display:flex;align-items:center;gap:.6rem;"><img src="${p.images[0]}" style="width:34px;height:34px;border-radius:6px;object-fit:cover;"/>${p.name}</td>
+      <td>${p.sku}</td>
+      <td style="font-family:monospace;">${(8900000000000 + p.id.replace(/\D/g, "")).toString().slice(0, 13)}</td>
+      <td>${p.stock === 0 ? '<span class="status-pill status-cancelled">0</span>' : p.stock < 8 ? `<span class="status-pill status-pending">${p.stock}</span>` : p.stock}</td>
+      <td style="display:flex;gap:.4rem;">
+        <button class="btn btn-outline btn-sm adj-btn" data-id="${p.id}" data-d="-1">−</button>
+        <button class="btn btn-outline btn-sm adj-btn" data-id="${p.id}" data-d="1">+</button>
+      </td>
+    </tr>`).join("") || `<tr><td colspan="5" style="text-align:center;padding:2rem;">No products match.</td></tr>`;
+
+  document.querySelectorAll(".adj-btn").forEach(b => b.addEventListener("click", async () => {
+    const p = INV_PRODUCTS.find(x => x.id === b.dataset.id);
+    p.stock = Math.max(0, p.stock + (+b.dataset.d));
+    await LuxeDB.saveProduct(p);
+    Toast.show(`Stock adjusted for ${p.name}`);
+    renderKpis(); renderInventory();
+  }));
+}
+function renderKpis() {
+  document.getElementById("kpiSkus").textContent = INV_PRODUCTS.length;
+  document.getElementById("kpiInStock").textContent = INV_PRODUCTS.filter(p => p.stock >= 8).length;
+  document.getElementById("kpiLow").textContent = INV_PRODUCTS.filter(p => p.stock > 0 && p.stock < 8).length;
+  document.getElementById("kpiOut").textContent = INV_PRODUCTS.filter(p => p.stock === 0).length;
+}
+document.getElementById("invSearch").addEventListener("input", renderInventory);
+document.getElementById("invFilter").addEventListener("change", renderInventory);
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!(await guardAdmin())) return;
+  renderAdminLayout("Inventory");
+  INV_PRODUCTS = await LuxeDB.getProducts();
+  renderKpis(); renderInventory();
+});
+</script>
+</body>
+</html>
