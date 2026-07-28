@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Track Your Order — LUXE MARKET</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body data-page="track">
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+    <main class="content">
+      <div class="breadcrumb"><a href="index.html">Home</a> / <span>Track Order</span></div>
+      <h2>Track Your Order</h2>
+
+      <div class="info-card" style="max-width:560px;">
+        <div style="display:flex;gap:.6rem;">
+          <input type="text" id="orderIdInput" class="select-input" style="flex:1;" placeholder="Enter Order ID, e.g. ORD10234"/>
+          <button class="btn btn-dark" id="trackBtn">Track</button>
+        </div>
+      </div>
+
+      <div id="trackResult" style="display:none;margin-top:1.5rem;">
+        <div class="info-card">
+          <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:.6rem;">
+            <div><strong id="trOrderId"></strong><div style="font-size:.8rem;color:var(--text-mute);" id="trOrderDate"></div></div>
+            <span class="status-pill" id="trStatusPill"></span>
+          </div>
+
+          <div class="tracker" id="trTracker">
+            <div class="tstep" data-s="pending"><div class="dot">1</div>Order Placed</div>
+            <div class="tstep" data-s="processing"><div class="dot">2</div>Processing</div>
+            <div class="tstep" data-s="shipped"><div class="dot">3</div>Shipped</div>
+            <div class="tstep" data-s="delivered"><div class="dot">4</div>Delivered</div>
+          </div>
+
+          <div id="trItems" style="margin-top:1rem;"></div>
+
+          <div style="display:flex;justify-content:space-between;margin-top:1rem;">
+            <strong>Total: <span id="trTotal"></span></strong>
+            <button class="btn btn-outline btn-sm" id="requestReturnBtn">Request Return</button>
+          </div>
+        </div>
+      </div>
+      <div id="trackNotFound" style="display:none;color:var(--rose);margin-top:1rem;">No order found with that ID.</div>
+    </main>
+    <div id="footer-mount"></div>
+  </div>
+</div>
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/layout.js"></script>
+<script>
+const STEPS = ["pending", "processing", "shipped", "delivered"];
+async function doTrack(id) {
+  const orders = await LuxeDB.getOrders();
+  const order = orders.find(o => o.id === id || o.id === id.replace(/^#/, ""));
+  document.getElementById("trackResult").style.display = order ? "block" : "none";
+  document.getElementById("trackNotFound").style.display = order ? "none" : "block";
+  if (!order) return;
+  document.getElementById("trOrderId").textContent = "Order #" + order.id;
+  document.getElementById("trOrderDate").textContent = new Date(order.createdAt).toLocaleString();
+  document.getElementById("trStatusPill").textContent = order.status;
+  document.getElementById("trStatusPill").className = "status-pill " + (STATUS_CLASS_MAP[order.status] || "status-pending");
+  const idx = order.status === "cancelled" ? -1 : STEPS.indexOf(order.status);
+  document.querySelectorAll("#trTracker .tstep").forEach((el, i) => el.classList.toggle("done", i <= idx));
+  document.getElementById("trItems").innerHTML = order.items.map(i => `
+    <div style="display:flex;justify-content:space-between;font-size:.85rem;padding:.4rem 0;border-bottom:1px solid #f2eee0;">
+      <span>${i.name} × ${i.qty}</span><span>${money(i.price * i.qty)}</span>
+    </div>`).join("");
+  document.getElementById("trTotal").textContent = money(order.total);
+  document.getElementById("requestReturnBtn").onclick = () => Toast.show("Return request submitted for review.");
+}
+const STATUS_CLASS_MAP = { pending: "status-pending", processing: "status-processing", shipped: "status-shipped", delivered: "status-delivered", cancelled: "status-cancelled" };
+document.getElementById("trackBtn").addEventListener("click", () => {
+  const v = document.getElementById("orderIdInput").value.trim();
+  if (v) doTrack(v);
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const urlId = new URLSearchParams(location.search).get("id");
+  const lastId = urlId || LS.get("luxe_last_order_id", null);
+  if (lastId) { document.getElementById("orderIdInput").value = lastId; doTrack(lastId); }
+});
+</script>
+</body>
+</html>

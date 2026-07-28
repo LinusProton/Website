@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login — LUXE MARKET</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body data-page="account">
+
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+
+    <main class="content">
+      <div class="auth-wrap">
+        <div class="eyebrow" style="justify-content:center;">Welcome Back</div>
+        <h2 style="text-align:center;">Login to LUXE MARKET</h2>
+        <form id="loginForm">
+          <div class="field"><label>Email Address</label><input type="email" id="loginEmail" required/></div>
+          <div class="field">
+            <label>Password</label>
+            <input type="password" id="loginPassword" required/>
+            <div style="text-align:right;margin-top:.3rem;"><a href="forgot-password.html" style="font-size:.78rem;color:var(--gold-dim);font-weight:700;">Forgot password?</a></div>
+          </div>
+          <div id="loginError" style="color:var(--rose);font-size:.8rem;margin-bottom:.6rem;"></div>
+          <button class="btn btn-gold btn-block" type="submit">Login</button>
+        </form>
+        <div class="or-divider">or continue with</div>
+        <div class="social-auth-row">
+          <button id="googleLoginBtn">🔵 Google</button>
+          <button id="fbLoginBtn">🔷 Facebook</button>
+        </div>
+        <p style="text-align:center;margin-top:1.2rem;font-size:.85rem;">New here? <a href="register.html" style="color:var(--gold-dim);font-weight:700;">Create an account</a></p>
+        <p style="text-align:center;font-size:.8rem;"><a href="checkout.html" style="color:var(--text-mute);">Continue as guest →</a></p>
+      </div>
+    </main>
+    <div id="footer-mount"></div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/layout.js"></script>
+<script>
+function nextUrl() { return new URLSearchParams(location.search).get("next") || "account.html"; }
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const errEl = document.getElementById("loginError");
+  errEl.textContent = "";
+  try {
+    await LuxeAuth.login(document.getElementById("loginEmail").value, document.getElementById("loginPassword").value);
+    Toast.show("Welcome back!");
+    window.location.href = nextUrl();
+  } catch (err) { errEl.textContent = err.message; }
+});
+document.getElementById("googleLoginBtn").addEventListener("click", async () => {
+  await LuxeAuth.loginWithGoogle();
+  window.location.href = nextUrl();
+});
+document.getElementById("fbLoginBtn").addEventListener("click", () => Toast.show("Facebook login requires Firebase Facebook provider setup."));
+</script>
+</body>
+</html>

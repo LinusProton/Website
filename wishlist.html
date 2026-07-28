@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Wishlist — LUXE MARKET</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body data-page="wishlist">
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+    <main class="content">
+      <div class="breadcrumb"><a href="index.html">Home</a> / <span>Wishlist</span></div>
+      <h2>My Wishlist</h2>
+      <div id="wishlistEmpty" style="display:none;text-align:center;padding:4rem 1rem;">
+        <h3>Your wishlist is empty</h3><p>Save items you love for later.</p>
+        <a href="shop.html" class="btn btn-gold">Browse Products</a>
+      </div>
+      <div class="grid grid-4" id="wishlistGrid"></div>
+    </main>
+    <div id="footer-mount"></div>
+  </div>
+</div>
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/render.js"></script>
+<script>
+async function renderWishlist() {
+  const ids = Wishlist.get();
+  const products = await LuxeDB.getProducts();
+  const items = ids.map(id => products.find(p => p.id === id)).filter(Boolean);
+  document.getElementById("wishlistEmpty").style.display = items.length ? "none" : "block";
+  const grid = document.getElementById("wishlistGrid");
+  grid.innerHTML = items.map(productCardHTML).join("");
+  wireProductCardEvents(grid, products);
+}
+document.addEventListener("wishlist:change", renderWishlist);
+document.addEventListener("DOMContentLoaded", renderWishlist);
+</script>
+</body>
+</html>

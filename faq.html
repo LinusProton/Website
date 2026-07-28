@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Help Centre — LUXE MARKET</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body data-page="faq">
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+    <main class="content">
+      <div class="breadcrumb"><a href="index.html">Home</a> / <span>Help Centre</span></div>
+      <h2>Help Centre</h2>
+
+      <div class="grid grid-4 section">
+        <a href="#" class="info-card" style="text-align:center;">📦<br/><strong>Orders</strong></a>
+        <a href="#" class="info-card" style="text-align:center;">🚚<br/><strong>Shipping</strong></a>
+        <a href="#" class="info-card" style="text-align:center;">↩️<br/><strong>Returns</strong></a>
+        <a href="contact.html" class="info-card" style="text-align:center;">💬<br/><strong>Contact Support</strong></a>
+      </div>
+
+      <div class="info-card">
+        <h4>Frequently Asked Questions</h4>
+        <div id="faqAccordion"></div>
+      </div>
+
+      <div class="promo-banner alt section" style="text-align:center;flex-direction:column;">
+        <h3>Still need help?</h3>
+        <p style="color:var(--ivory-dim);">Our support team is available on WhatsApp, phone, and email.</p>
+        <div style="display:flex;gap:.7rem;">
+          <a href="https://wa.me/254700123456" target="_blank" rel="noopener" class="btn btn-gold">WhatsApp Us</a>
+          <a href="contact.html" class="btn btn-outline-light">Contact Form</a>
+        </div>
+      </div>
+    </main>
+    <div id="footer-mount"></div>
+  </div>
+</div>
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/layout.js"></script>
+<script>
+const FAQS = [
+  ["How do I track my order?", "Go to Track Order in the sidebar and enter your order ID, or find it under My Account → Order History."],
+  ["What payment methods do you accept?", "M-Pesa, Visa/Mastercard, bank transfer, other mobile money, PayPal, and Cash on Delivery in select areas."],
+  ["What is your return policy?", "Items can be returned within 30 days of delivery in original condition. Start a return from My Account → Returns."],
+  ["Do you deliver outside Nairobi?", "Yes — we deliver countrywide. Delivery in Nairobi takes 24 hours; upcountry orders take 2–4 business days."],
+  ["How do I use a coupon code?", "Enter your code in the Cart or Checkout page under 'Coupon or gift voucher code' and click Apply."],
+  ["Can I change my order after placing it?", "Contact support within 1 hour of placing your order and we'll do our best to adjust it before it ships."]
+];
+document.getElementById("faqAccordion").innerHTML = FAQS.map(([q, a], i) => `
+  <details class="filter-group" ${i === 0 ? "open" : ""}>
+    <summary>${q}</summary>
+    <p style="margin-top:.6rem;">${a}</p>
+  </details>`).join("");
+</script>
+</body>
+</html>

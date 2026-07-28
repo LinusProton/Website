@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Account — LUXE MARKET</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body data-page="account">
+
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+
+    <main class="content">
+      <div class="breadcrumb"><a href="index.html">Home</a> / <span>My Account</span></div>
+      <h2 id="accountGreeting">My Account</h2>
+
+      <div class="account-layout">
+        <nav class="account-nav">
+          <a href="#profile" class="acc-tab active" data-tab="profile">Profile</a>
+          <a href="#addresses" class="acc-tab" data-tab="addresses">Address Book</a>
+          <a href="#orders" class="acc-tab" data-tab="orders">Order History</a>
+          <a href="#returns" class="acc-tab" data-tab="returns">Returns</a>
+          <a href="#wishlist" class="acc-tab" data-tab="wishlist">Wishlist</a>
+          <a href="#payments" class="acc-tab" data-tab="payments">Saved Payment Methods</a>
+          <a href="#notifications" class="acc-tab" data-tab="notifications">Notifications</a>
+          <a href="#" id="logoutLink" style="color:var(--rose);">Logout</a>
+        </nav>
+
+        <div>
+          <!-- PROFILE -->
+          <section class="acc-panel" id="panel-profile">
+            <div class="info-card">
+              <h4>Personal Information</h4>
+              <div class="form-grid">
+                <div class="field"><label>Full Name</label><input id="profName"/></div>
+                <div class="field"><label>Email</label><input id="profEmail" disabled/></div>
+                <div class="field"><label>Phone Number</label><input id="profPhone" placeholder="07xx xxx xxx"/></div>
+                <div class="field"><label>Date of Birth</label><input type="date" id="profDob"/></div>
+              </div>
+              <button class="btn btn-dark btn-sm" id="saveProfileBtn">Save Changes</button>
+            </div>
+            <div class="info-card">
+              <h4>Loyalty Rewards</h4>
+              <p>You have <strong id="loyaltyPoints">0</strong> points — redeemable for discounts at checkout.</p>
+              <div class="progress-track"><div class="progress-fill" style="width:40%;"></div></div>
+              <p style="font-size:.75rem;margin-top:.4rem;">60 more points to your next KSh 500 reward.</p>
+            </div>
+          </section>
+
+          <!-- ADDRESSES -->
+          <section class="acc-panel" id="panel-addresses" style="display:none;">
+            <div class="info-card">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <h4>Saved Addresses</h4>
+                <button class="btn btn-outline btn-sm" id="addAddressBtn">+ Add New</button>
+              </div>
+              <div id="addressList"></div>
+            </div>
+          </section>
+
+          <!-- ORDERS -->
+          <section class="acc-panel" id="panel-orders" style="display:none;">
+            <div class="info-card">
+              <h4>Order History</h4>
+              <div id="orderHistoryList"></div>
+            </div>
+          </section>
+
+          <!-- RETURNS -->
+          <section class="acc-panel" id="panel-returns" style="display:none;">
+            <div class="info-card">
+              <h4>Returns &amp; Refunds</h4>
+              <p>Select an order below to request a return. Approved returns are refunded within 5–7 business days.</p>
+              <div id="returnableOrders"></div>
+            </div>
+          </section>
+
+          <!-- WISHLIST -->
+          <section class="acc-panel" id="panel-wishlist" style="display:none;">
+            <div class="info-card">
+              <h4>Your Wishlist</h4>
+              <p>Manage your saved items on the dedicated <a href="wishlist.html" style="color:var(--gold-dim);font-weight:700;">Wishlist page →</a></p>
+            </div>
+          </section>
+
+          <!-- PAYMENTS -->
+          <section class="acc-panel" id="panel-payments" style="display:none;">
+            <div class="info-card">
+              <h4>Saved Payment Methods</h4>
+              <div class="payment-option selected"><span class="pico">📱</span><div><strong>M-Pesa</strong><div style="font-size:.78rem;color:var(--text-mute);">+254 7•• ••• 214</div></div></div>
+              <div class="payment-option"><span class="pico">💳</span><div><strong>Visa •••• 4242</strong><div style="font-size:.78rem;color:var(--text-mute);">Expires 09/28</div></div></div>
+              <button class="btn btn-outline btn-sm">+ Add Payment Method</button>
+            </div>
+          </section>
+
+          <!-- NOTIFICATIONS -->
+          <section class="acc-panel" id="panel-notifications" style="display:none;">
+            <div class="info-card">
+              <h4>Notifications</h4>
+              <div id="notifList"></div>
+              <h4 style="margin-top:1.4rem;">Preferences</h4>
+              <label style="display:flex;gap:.5rem;font-size:.85rem;margin-bottom:.5rem;"><input type="checkbox" checked/> Order &amp; shipping updates</label>
+              <label style="display:flex;gap:.5rem;font-size:.85rem;margin-bottom:.5rem;"><input type="checkbox" checked/> Promotions &amp; discounts</label>
+              <label style="display:flex;gap:.5rem;font-size:.85rem;"><input type="checkbox"/> Product restock alerts</label>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <div id="footer-mount"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addressModal">
+  <div class="modal-box">
+    <div class="modal-head"><h4>Add Address</h4><button class="btn btn-outline btn-sm" id="closeAddressModal">Close</button></div>
+    <div class="form-grid">
+      <div class="field"><label>Label</label><input id="newAddrLabel" placeholder="Home, Office…"/></div>
+      <div class="field"><label>Phone</label><input id="newAddrPhone"/></div>
+      <div class="field form-grid full"><label>Street Address</label><input id="newAddrStreet"/></div>
+      <div class="field"><label>City</label><input id="newAddrCity"/></div>
+    </div>
+    <button class="btn btn-dark btn-block" id="saveAddressBtn">Save Address</button>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/account.js"></script>
+</body>
+</html>

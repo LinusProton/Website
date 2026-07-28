@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shop All Products — LUXE MARKET</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body data-page="shop">
+
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+
+    <main class="content">
+      <div class="breadcrumb"><a href="index.html">Home</a> / <span id="crumbCurrent">Shop</span></div>
+      <div class="section-head">
+        <div><span class="eyebrow">Catalog</span><h2 id="shopTitle">All Products</h2></div>
+      </div>
+
+      <div class="shop-layout">
+        <!-- FILTERS -->
+        <aside class="filters-panel">
+          <h4 style="margin-bottom:.8rem;">Filters</h4>
+
+          <details class="filter-group" open>
+            <summary>Category</summary>
+            <div id="filterCategories" style="margin-top:.6rem;"></div>
+          </details>
+
+          <details class="filter-group" open>
+            <summary>Brand</summary>
+            <div id="filterBrands" style="margin-top:.6rem;"></div>
+          </details>
+
+          <details class="filter-group" open>
+            <summary>Price Range (KSh)</summary>
+            <div class="price-range-inputs">
+              <input type="number" id="minPrice" placeholder="Min"/>
+              <input type="number" id="maxPrice" placeholder="Max"/>
+            </div>
+            <button class="btn btn-outline btn-sm btn-block" style="margin-top:.6rem;" id="applyPriceBtn">Apply</button>
+          </details>
+
+          <details class="filter-group" open>
+            <summary>Rating</summary>
+            <div id="filterRating" style="margin-top:.6rem;"></div>
+          </details>
+
+          <details class="filter-group">
+            <summary>Colour</summary>
+            <div class="swatch-row" id="filterColors"></div>
+          </details>
+
+          <details class="filter-group">
+            <summary>Availability</summary>
+            <label class="filter-opt"><input type="checkbox" id="filterInStock"/> In stock only</label>
+          </details>
+
+          <button class="btn btn-dark btn-block btn-sm" id="clearFiltersBtn" style="margin-top:1rem;">Clear All Filters</button>
+        </aside>
+
+        <!-- RESULTS -->
+        <div>
+          <div class="toolbar-row">
+            <span id="resultsCount" style="font-size:.85rem;color:var(--text-mute);"></span>
+            <div style="display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;">
+              <select class="select-input" id="sortSelect">
+                <option value="">Sort: Featured</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="popularity">Popularity</option>
+                <option value="rating">Rating</option>
+                <option value="newest">Newest</option>
+              </select>
+              <div class="view-toggle">
+                <button id="gridViewBtn" class="active" title="Grid view">▦</button>
+                <button id="listViewBtn" title="List view">☰</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="productGrid" class="grid grid-4"></div>
+          <div id="emptyState" style="display:none;text-align:center;padding:3rem;color:var(--text-mute);">
+            <h3>No products match your filters</h3>
+            <p>Try clearing some filters or searching a different term.</p>
+          </div>
+          <div style="display:flex;justify-content:center;margin-top:2rem;">
+            <button class="btn btn-outline" id="loadMoreBtn">Load More Products</button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div id="footer-mount"></div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/render.js"></script>
+<script src="js/shop.js"></script>
+</body>
+</html>

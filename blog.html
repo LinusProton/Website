@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blog — LUXE MARKET</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body data-page="blog">
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+    <main class="content">
+      <div class="breadcrumb"><a href="index.html">Home</a> / <span>Blog</span></div>
+      <h2>The LUXE Journal</h2>
+      <p>Product guides, styling tips and buying advice from our team.</p>
+      <div class="grid grid-3" id="blogGrid"></div>
+    </main>
+    <div id="footer-mount"></div>
+  </div>
+</div>
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/layout.js"></script>
+<script>
+const POSTS = [
+  { title: "How to Choose the Right Headphones", cat: "Buying Guide", img: "blog1", excerpt: "ANC, open-back, or true wireless — here's how to pick based on how you actually listen." },
+  { title: "5 Ways to Style a Linen Blazer", cat: "Fashion Tips", img: "blog2", excerpt: "From boardroom to weekend brunch, one blazer, five completely different looks." },
+  { title: "Building a Capsule Skincare Routine", cat: "Product Guide", img: "blog3", excerpt: "Fewer products, better results — our derm-inspired starter routine." },
+  { title: "Watches 101: Automatic vs Quartz", cat: "Buying Guide", img: "blog4", excerpt: "What the movement inside your watch actually means for accuracy and upkeep." },
+  { title: "Gifting Guide: Under KSh 3,000", cat: "Promotions", img: "blog5", excerpt: "Thoughtful gifts that don't look or feel budget." },
+  { title: "Inside Our Nairobi Fulfilment Centre", cat: "News", img: "blog6", excerpt: "A behind-the-scenes look at how your order gets packed and shipped." }
+];
+document.getElementById("blogGrid").innerHTML = POSTS.map(p => `
+  <div class="product-card">
+    <div class="product-media"><img src="https://picsum.photos/seed/${p.img}/500/400"/></div>
+    <div class="product-info">
+      <span class="product-brand">${p.cat}</span>
+      <h4 style="margin:0;">${p.title}</h4>
+      <p style="font-size:.82rem;">${p.excerpt}</p>
+      <a href="#" class="link-more">Read More →</a>
+    </div>
+  </div>`).join("");
+</script>
+</body>
+</html>

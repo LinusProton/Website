@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Checkout — LUXE MARKET</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body data-page="checkout">
+
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+
+    <main class="content">
+      <h2 style="text-align:center;">Checkout</h2>
+      <div class="steps-row" id="stepsRow">
+        <div class="step-item active" data-step="1"><span class="num">1</span> Address</div>
+        <div class="step-item" data-step="2"><span class="num">2</span> Delivery</div>
+        <div class="step-item" data-step="3"><span class="num">3</span> Payment</div>
+        <div class="step-item" data-step="4"><span class="num">4</span> Review</div>
+      </div>
+
+      <!-- ORDER CONFIRMATION VIEW -->
+      <div id="confirmationView" style="display:none;text-align:center;max-width:520px;margin:2rem auto;">
+        <div style="font-size:3rem;">✅</div>
+        <h2>Order Confirmed!</h2>
+        <p>Thank you — your order <strong id="confirmOrderId"></strong> has been placed. A confirmation has been sent to your email.</p>
+        <div class="info-card" style="text-align:left;">
+          <div class="summary-line"><span>Order Total</span><strong id="confirmTotal"></strong></div>
+          <div class="summary-line"><span>Payment Method</span><span id="confirmPayment"></span></div>
+          <div class="summary-line"><span>Estimated Delivery</span><span id="confirmEta"></span></div>
+        </div>
+        <div style="display:flex;gap:.7rem;justify-content:center;margin-top:1rem;">
+          <a href="track-order.html" class="btn btn-gold">Track My Order</a>
+          <a href="shop.html" class="btn btn-outline">Continue Shopping</a>
+        </div>
+      </div>
+
+      <div id="checkoutFlow" class="cart-layout">
+        <div>
+          <!-- Guest / Login -->
+          <div class="info-card" id="guestLoginCard">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div><strong>Checking out as guest.</strong> <span style="color:var(--text-mute);font-size:.85rem;">Have an account?</span></div>
+              <a href="login.html?next=checkout.html" class="btn btn-outline btn-sm">Login</a>
+            </div>
+          </div>
+
+          <!-- STEP 1: ADDRESS -->
+          <div class="info-card step-panel" data-step="1">
+            <h4>Shipping Address</h4>
+            <div class="form-grid">
+              <div class="field"><label>Full Name</label><input id="shipName" required/></div>
+              <div class="field"><label>Phone Number</label><input id="shipPhone" placeholder="07xx xxx xxx" required/></div>
+              <div class="field form-grid full"><label>Street Address</label><input id="shipStreet" required/></div>
+              <div class="field"><label>City / Town</label><input id="shipCity" required/></div>
+              <div class="field"><label>County</label><input id="shipCounty" required/></div>
+            </div>
+            <label style="display:flex;gap:.5rem;align-items:center;font-size:.82rem;margin:.6rem 0 1rem;">
+              <input type="checkbox" id="sameBilling" checked/> Billing address same as shipping
+            </label>
+            <div id="billingFields" style="display:none;">
+              <h4>Billing Address</h4>
+              <div class="form-grid">
+                <div class="field"><label>Full Name</label><input id="billName"/></div>
+                <div class="field"><label>Phone Number</label><input id="billPhone"/></div>
+                <div class="field form-grid full"><label>Street Address</label><input id="billStreet"/></div>
+                <div class="field"><label>City / Town</label><input id="billCity"/></div>
+              </div>
+            </div>
+            <button class="btn btn-dark" id="toStep2">Continue to Delivery</button>
+          </div>
+
+          <!-- STEP 2: DELIVERY -->
+          <div class="info-card step-panel" data-step="2" style="display:none;">
+            <h4>Delivery Options</h4>
+            <label class="payment-option selected" data-val="standard"><input type="radio" name="delivery" value="standard" checked/> <div><strong>Standard Delivery</strong><div style="font-size:.78rem;color:var(--text-mute);">2–4 business days · KSh 400 (free over KSh 5,000)</div></div></label>
+            <label class="payment-option" data-val="express"><input type="radio" name="delivery" value="express"/> <div><strong>Express Delivery</strong><div style="font-size:.78rem;color:var(--text-mute);">Next business day · KSh 900</div></div></label>
+            <label class="payment-option" data-val="pickup"><input type="radio" name="delivery" value="pickup"/> <div><strong>Store Pickup</strong><div style="font-size:.78rem;color:var(--text-mute);">Ready in 2 hours · Free</div></div></label>
+            <div style="display:flex;gap:.7rem;margin-top:1rem;">
+              <button class="btn btn-outline" data-back="1">Back</button>
+              <button class="btn btn-dark" id="toStep3">Continue to Payment</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: PAYMENT -->
+          <div class="info-card step-panel" data-step="3" style="display:none;">
+            <h4>Payment Method</h4>
+            <label class="payment-option selected" data-val="mpesa"><input type="radio" name="payment" value="mpesa" checked/> <span class="pico">📱</span> <div><strong>M-Pesa</strong><div style="font-size:.78rem;color:var(--text-mute);">Pay via STK push to your phone</div></div></label>
+            <label class="payment-option" data-val="card"><input type="radio" name="payment" value="card"/> <span class="pico">💳</span> <div><strong>Credit / Debit Card</strong><div style="font-size:.78rem;color:var(--text-mute);">Visa, Mastercard</div></div></label>
+            <label class="payment-option" data-val="bank"><input type="radio" name="payment" value="bank"/> <span class="pico">🏦</span> <div><strong>Bank Transfer</strong></div></label>
+            <label class="payment-option" data-val="mobilemoney"><input type="radio" name="payment" value="mobilemoney"/> <span class="pico">📲</span> <div><strong>Other Mobile Money</strong></div></label>
+            <label class="payment-option" data-val="paypal"><input type="radio" name="payment" value="paypal"/> <span class="pico">🅿️</span> <div><strong>PayPal</strong></div></label>
+            <label class="payment-option" data-val="cod"><input type="radio" name="payment" value="cod"/> <span class="pico">💵</span> <div><strong>Cash on Delivery</strong></div></label>
+
+            <div id="mpesaFields" style="margin-top:1rem;">
+              <div class="field"><label>M-Pesa Phone Number</label><input id="mpesaPhone" placeholder="07xx xxx xxx"/></div>
+            </div>
+            <div id="cardFields" style="display:none;margin-top:1rem;">
+              <div class="form-grid">
+                <div class="field form-grid full"><label>Card Number</label><input placeholder="1234 5678 9012 3456"/></div>
+                <div class="field"><label>Expiry</label><input placeholder="MM/YY"/></div>
+                <div class="field"><label>CVV</label><input placeholder="123"/></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:.7rem;margin-top:1rem;">
+              <button class="btn btn-outline" data-back="2">Back</button>
+              <button class="btn btn-dark" id="toStep4">Review Order</button>
+            </div>
+          </div>
+
+          <!-- STEP 4: REVIEW -->
+          <div class="info-card step-panel" data-step="4" style="display:none;">
+            <h4>Review Your Order</h4>
+            <div id="reviewItemsList"></div>
+            <div style="display:flex;gap:.7rem;margin-top:1rem;">
+              <button class="btn btn-outline" data-back="3">Back</button>
+              <button class="btn btn-gold" id="placeOrderBtn">Place Order</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="summary-card">
+          <h4>Order Summary</h4>
+          <div id="checkoutItemsMini"></div>
+          <div class="summary-line"><span>Subtotal</span><span id="coSubtotal"></span></div>
+          <div class="summary-line"><span>Discount</span><span id="coDiscount"></span></div>
+          <div class="summary-line"><span>Shipping</span><span id="coShipping"></span></div>
+          <div class="summary-line"><span>Tax</span><span id="coTax"></span></div>
+          <div class="summary-line total"><span>Total</span><span id="coTotal"></span></div>
+        </aside>
+      </div>
+    </main>
+    <div id="footer-mount"></div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/checkout.js"></script>
+</body>
+</html>

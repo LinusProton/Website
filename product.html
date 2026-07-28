@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title id="pageTitle">Product — LUXE MARKET</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body data-page="shop">
+
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+
+    <main class="content" id="pdpContent">
+      <div class="breadcrumb" id="pdpBreadcrumb"><a href="index.html">Home</a> / <a href="shop.html">Shop</a> / <span>Loading…</span></div>
+
+      <div class="pdp-layout">
+        <!-- GALLERY -->
+        <div>
+          <div class="pdp-gallery-main" id="galleryMain">
+            <img id="galleryMainImg" src="" alt=""/>
+          </div>
+          <div class="pdp-gallery-thumbs" id="galleryThumbs"></div>
+          <div style="margin-top:.8rem;">
+            <button class="btn btn-outline btn-sm" id="playVideoBtn">▶ Watch Product Video</button>
+          </div>
+        </div>
+
+        <!-- INFO -->
+        <div>
+          <span class="product-brand" id="pdpBrand"></span>
+          <h1 class="pdp-title" id="pdpName"></h1>
+          <div class="product-rating"><span class="stars" id="pdpStars"></span> <span id="pdpRatingText"></span></div>
+          <div class="pdp-sku" id="pdpSku"></div>
+
+          <div class="pdp-price" id="pdpPrice"></div>
+
+          <div id="pdpColorBlock">
+            <div class="opt-label">Colour: <span id="selectedColorName"></span></div>
+            <div class="swatch-row" id="pdpColors"></div>
+          </div>
+
+          <div id="pdpSizeBlock" style="display:none;">
+            <div class="opt-label">Size</div>
+            <div class="size-row" id="pdpSizes"></div>
+          </div>
+
+          <div class="opt-label">Quantity</div>
+          <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+            <div class="qty-stepper">
+              <button id="qtyMinus">−</button>
+              <input type="text" id="qtyInput" value="1" readonly/>
+              <button id="qtyPlus">+</button>
+            </div>
+            <span class="stock-line" id="pdpStock"></span>
+          </div>
+
+          <div class="pdp-actions">
+            <button class="btn btn-dark" id="addToCartBtn">Add to Cart</button>
+            <button class="btn btn-gold" id="buyNowBtn">Buy Now</button>
+            <button class="btn btn-outline btn-icon" id="wishBtn" title="Add to wishlist">♡</button>
+            <button class="btn btn-outline btn-icon" id="cmpBtn" title="Compare">⇄</button>
+          </div>
+
+          <div class="trust-row">
+            <div class="trust-item">🚚 <span>Free delivery in Nairobi on orders over KSh 5,000</span></div>
+            <div class="trust-item">↩ <span>30-day hassle-free returns</span></div>
+            <div class="trust-item">🔒 <span>Secure checkout via M-Pesa, card &amp; PayPal</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="desc">Description</button>
+        <button class="tab-btn" data-tab="specs">Specifications</button>
+        <button class="tab-btn" data-tab="reviews">Reviews</button>
+        <button class="tab-btn" data-tab="delivery">Delivery &amp; Returns</button>
+      </div>
+      <div class="tab-panel active" id="tab-desc"><p id="pdpDescription"></p></div>
+      <div class="tab-panel" id="tab-specs"><table class="spec-table" id="pdpSpecsTable"></table></div>
+      <div class="tab-panel" id="tab-reviews">
+        <div class="grid grid-2" style="align-items:start;">
+          <div>
+            <h3 id="reviewsHeading">Customer Reviews</h3>
+            <div id="reviewsList"></div>
+          </div>
+          <div class="info-card">
+            <h4>Rating Breakdown</h4>
+            <div class="rating-bars" id="ratingBars"></div>
+            <button class="btn btn-outline btn-sm btn-block" style="margin-top:1.2rem;" id="writeReviewBtn">Write a Review</button>
+            <form id="reviewForm" style="display:none;margin-top:1rem;">
+              <div class="field"><label>Your Rating</label>
+                <select id="reviewRating" class="select-input" style="width:100%;">
+                  <option value="5">★★★★★ Excellent</option>
+                  <option value="4">★★★★☆ Good</option>
+                  <option value="3">★★★☆☆ Average</option>
+                  <option value="2">★★☆☆☆ Poor</option>
+                  <option value="1">★☆☆☆☆ Terrible</option>
+                </select>
+              </div>
+              <div class="field"><label>Your Name</label><input id="reviewName" placeholder="Name"/></div>
+              <div class="field"><label>Review</label><textarea id="reviewText" rows="3" placeholder="Share your thoughts…"></textarea></div>
+              <button type="submit" class="btn btn-dark btn-sm">Submit Review</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="tab-panel" id="tab-delivery">
+        <p><strong>Delivery:</strong> Nairobi within 24 hours, upcountry 2–4 business days. Free delivery on orders over KSh 5,000.</p>
+        <p><strong>Returns:</strong> Items may be returned within 30 days in original condition for a full refund or exchange. Start a return from your Order History.</p>
+      </div>
+
+      <!-- FREQUENTLY BOUGHT TOGETHER -->
+      <section class="section" style="margin-top:2.5rem;">
+        <div class="section-head"><div><h2 style="font-size:1.3rem;">Frequently Bought Together</h2></div></div>
+        <div class="grid grid-4" id="fbtGrid"></div>
+      </section>
+
+      <!-- RELATED -->
+      <section class="section">
+        <div class="section-head"><div><h2 style="font-size:1.3rem;">You May Also Like</h2></div></div>
+        <div class="grid grid-4" id="relatedGrid"></div>
+      </section>
+
+      <!-- RECENTLY VIEWED -->
+      <section class="section">
+        <div class="section-head"><div><h2 style="font-size:1.3rem;">Recently Viewed</h2></div></div>
+        <div class="grid grid-4" id="recentGrid"></div>
+      </section>
+    </main>
+    <div id="footer-mount"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="videoModal">
+  <div class="modal-box">
+    <div class="modal-head"><h4>Product Video</h4><button class="btn btn-outline btn-sm" id="closeVideoModal">Close</button></div>
+    <div style="aspect-ratio:16/9;background:var(--navy-900);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--ivory-dim);">
+      Demo video placeholder — connect a real product video URL here.
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/render.js"></script>
+<script src="js/product.js"></script>
+</body>
+</html>

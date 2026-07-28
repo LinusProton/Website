@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Compare Products — LUXE MARKET</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body data-page="compare">
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+    <main class="content">
+      <div class="breadcrumb"><a href="index.html">Home</a> / <span>Compare Products</span></div>
+      <h2>Compare Products</h2>
+      <div id="compareEmpty" style="display:none;text-align:center;padding:4rem 1rem;">
+        <h3>Nothing to compare yet</h3><p>Add up to 4 products from the shop to compare them here.</p>
+        <a href="shop.html" class="btn btn-gold">Browse Products</a>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="admin-table" id="compareTable" style="min-width:700px;"></table>
+      </div>
+    </main>
+    <div id="footer-mount"></div>
+  </div>
+</div>
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/render.js"></script>
+<script>
+async function renderCompare() {
+  const ids = Compare.get();
+  const products = await LuxeDB.getProducts();
+  const items = ids.map(id => products.find(p => p.id === id)).filter(Boolean);
+  document.getElementById("compareEmpty").style.display = items.length ? "none" : "block";
+  const table = document.getElementById("compareTable");
+  if (!items.length) { table.innerHTML = ""; return; }
+
+  const rows = [
+    ["Image", p => `<img src="${p.images[0]}" style="width:70px;height:70px;object-fit:cover;border-radius:8px;"/>`],
+    ["Name", p => p.name],
+    ["Brand", p => p.brand],
+    ["Price", p => money(p.discountPrice ?? p.price)],
+    ["Rating", p => `${p.rating} ★ (${p.reviewCount})`],
+    ["Stock", p => p.stock > 0 ? `${p.stock} available` : "Out of stock"],
+    ["Material", p => p.specs.Material],
+    ["Origin", p => p.specs.Origin],
+    ["", p => `<button class="btn btn-dark btn-sm add-cart-btn" data-id="${p.id}">Add to Cart</button> <button class="btn btn-outline btn-sm rm-cmp" data-id="${p.id}">Remove</button>`]
+  ];
+  table.innerHTML = `<thead><tr><th></th>${items.map(p => `<th>${p.name}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map(([label, fn]) => `<tr><td><strong>${label}</strong></td>${items.map(p => `<td>${fn(p)}</td>`).join("")}</tr>`).join("")}</tbody>`;
+
+  table.querySelectorAll(".add-cart-btn").forEach(b => b.addEventListener("click", () => Cart.add(items.find(p => p.id === b.dataset.id))));
+  table.querySelectorAll(".rm-cmp").forEach(b => b.addEventListener("click", () => { Compare.toggle(b.dataset.id); renderCompare(); }));
+}
+document.addEventListener("compare:change", renderCompare);
+document.addEventListener("DOMContentLoaded", renderCompare);
+</script>
+</body>
+</html>
