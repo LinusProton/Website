@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Settings — LUXE Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body data-page="settings">
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+    <main class="content">
+      <div class="account-layout">
+        <nav class="account-nav">
+          <a href="#store" class="set-tab active" data-tab="store">Store Information</a>
+          <a href="#shipping" class="set-tab" data-tab="shipping">Shipping Rates</a>
+          <a href="#payments" class="set-tab" data-tab="payments">Payment Gateways</a>
+          <a href="#taxes" class="set-tab" data-tab="taxes">Taxes</a>
+          <a href="#notifications" class="set-tab" data-tab="notifications">Email &amp; Notifications</a>
+          <a href="#website" class="set-tab" data-tab="website">Website Management</a>
+          <a href="#users" class="set-tab" data-tab="users">Admins &amp; Roles</a>
+          <a href="#backup" class="set-tab" data-tab="backup">Backup</a>
+        </nav>
+
+        <div>
+          <section class="set-panel" id="panel-store">
+            <div class="info-card">
+              <h4>Store Information</h4>
+              <div class="form-grid">
+                <div class="field"><label>Store Name</label><input value="LUXE MARKET"/></div>
+                <div class="field"><label>Support Email</label><input value="support@luxemarket.co.ke"/></div>
+                <div class="field"><label>Phone</label><input value="+254 700 123 456"/></div>
+                <div class="field"><label>Currency</label><select class="select-input"><option>KES — Kenyan Shilling</option><option>USD — US Dollar</option></select></div>
+                <div class="field"><label>Language</label><select class="select-input"><option>English</option><option>Swahili</option></select></div>
+                <div class="field form-grid full"><label>Store Address</label><input value="Kimathi Street, Nairobi CBD, Kenya"/></div>
+              </div>
+              <button class="btn btn-dark btn-sm">Save Store Info</button>
+            </div>
+          </section>
+
+          <section class="set-panel" id="panel-shipping" style="display:none;">
+            <div class="info-card">
+              <h4>Shipping Rates</h4>
+              <table class="admin-table">
+                <thead><tr><th>Zone</th><th>Method</th><th>Rate</th><th>Free Over</th></tr></thead>
+                <tbody>
+                  <tr><td>Nairobi</td><td>Standard</td><td>KSh 400</td><td>KSh 5,000</td></tr>
+                  <tr><td>Nairobi</td><td>Express</td><td>KSh 900</td><td>—</td></tr>
+                  <tr><td>Upcountry</td><td>Standard</td><td>KSh 700</td><td>KSh 8,000</td></tr>
+                  <tr><td>International</td><td>Standard</td><td>KSh 3,500</td><td>—</td></tr>
+                </tbody>
+              </table>
+              <button class="btn btn-outline btn-sm" style="margin-top:.8rem;">+ Add Shipping Zone</button>
+            </div>
+          </section>
+
+          <section class="set-panel" id="panel-payments" style="display:none;">
+            <div class="info-card">
+              <h4>Payment Gateways</h4>
+              <div class="payment-option selected"><span class="pico">📱</span><div><strong>M-Pesa (Daraja API)</strong><div style="font-size:.78rem;color:var(--text-mute);">Connected · Till/Paybill configured</div></div></div>
+              <div class="payment-option selected"><span class="pico">💳</span><div><strong>Stripe / Card Payments</strong><div style="font-size:.78rem;color:var(--text-mute);">Connected</div></div></div>
+              <div class="payment-option"><span class="pico">🅿️</span><div><strong>PayPal</strong><div style="font-size:.78rem;color:var(--text-mute);">Not connected</div></div></div>
+              <div class="payment-option selected"><span class="pico">💵</span><div><strong>Cash on Delivery</strong><div style="font-size:.78rem;color:var(--text-mute);">Enabled in Nairobi only</div></div></div>
+              <button class="btn btn-dark btn-sm" style="margin-top:.6rem;">Save Gateway Settings</button>
+            </div>
+          </section>
+
+          <section class="set-panel" id="panel-taxes" style="display:none;">
+            <div class="info-card">
+              <h4>Tax Settings</h4>
+              <div class="form-grid">
+                <div class="field"><label>VAT Rate (%)</label><input value="16"/></div>
+                <div class="field"><label>Tax Registration No.</label><input placeholder="PIN / VAT number"/></div>
+              </div>
+              <label style="display:flex;gap:.5rem;font-size:.85rem;"><input type="checkbox" checked/> Prices displayed are VAT-inclusive</label>
+              <button class="btn btn-dark btn-sm" style="margin-top:.8rem;">Save Tax Settings</button>
+            </div>
+          </section>
+
+          <section class="set-panel" id="panel-notifications" style="display:none;">
+            <div class="info-card">
+              <h4>Email Settings</h4>
+              <div class="form-grid">
+                <div class="field"><label>From Name</label><input value="LUXE MARKET"/></div>
+                <div class="field"><label>From Email</label><input value="orders@luxemarket.co.ke"/></div>
+              </div>
+              <h4 style="margin-top:1.2rem;">Notification Triggers</h4>
+              <label style="display:flex;gap:.5rem;font-size:.85rem;margin-bottom:.4rem;"><input type="checkbox" checked/> New order received</label>
+              <label style="display:flex;gap:.5rem;font-size:.85rem;margin-bottom:.4rem;"><input type="checkbox" checked/> Low stock alert</label>
+              <label style="display:flex;gap:.5rem;font-size:.85rem;"><input type="checkbox" checked/> Customer review submitted</label>
+            </div>
+          </section>
+
+          <section class="set-panel" id="panel-website" style="display:none;">
+            <div class="info-card">
+              <h4>Website Management</h4>
+              <div class="grid grid-2">
+                <a href="marketing.html" class="info-card">🖼️ Homepage Banners</a>
+                <a href="#" class="info-card">📋 Menus</a>
+                <a href="#" class="info-card">📄 Pages</a>
+                <a href="../blog.html" class="info-card">📰 Blog</a>
+                <a href="../faq.html" class="info-card">❓ FAQs</a>
+                <a href="#" class="info-card">🔍 SEO Settings</a>
+                <a href="#" class="info-card">🗂️ Media Library</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="set-panel" id="panel-users" style="display:none;">
+            <div class="info-card">
+              <div class="toolbar-row" style="margin-bottom:.6rem;">
+                <h4 style="margin:0;">Admins &amp; Staff</h4>
+                <button class="btn btn-gold btn-sm">+ Invite Staff</button>
+              </div>
+              <table class="admin-table">
+                <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Last Active</th></tr></thead>
+                <tbody>
+                  <tr><td>Store Admin</td><td>admin@luxe.test</td><td><span class="tag-chip">Super Admin</span></td><td>Just now</td></tr>
+                  <tr><td>Faith N.</td><td>faith@luxemarket.co.ke</td><td><span class="tag-chip">Merchandiser</span></td><td>2h ago</td></tr>
+                  <tr><td>Kevin M.</td><td>kevin@luxemarket.co.ke</td><td><span class="tag-chip">Support</span></td><td>1d ago</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="info-card">
+              <h4>Recent Activity Log</h4>
+              <div style="font-size:.83rem;color:var(--text-mute);">
+                <p>Store Admin updated product "Automatic Steel Watch" — 12 min ago</p>
+                <p>Faith N. created coupon "SAVE500" — 3h ago</p>
+                <p>Store Admin marked order #ORD10238 as shipped — 5h ago</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="set-panel" id="panel-backup" style="display:none;">
+            <div class="info-card">
+              <h4>Backup &amp; Data</h4>
+              <p>Export a full backup of products, orders and customers, or restore from a previous export.</p>
+              <div style="display:flex;gap:.7rem;flex-wrap:wrap;">
+                <button class="btn btn-dark btn-sm" id="exportDataBtn">Export Full Backup (JSON)</button>
+                <button class="btn btn-outline btn-sm">Restore from Backup</button>
+              </div>
+              <p style="font-size:.75rem;color:var(--text-mute);margin-top:.8rem;">In production, connect this to Firebase Storage + a Cloud Function for automated nightly backups of Firestore.</p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../js/data.js"></script>
+<script src="../js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/admin-layout.js"></script>
+<script src="../js/admin.js"></script>
+<script>
+document.querySelectorAll(".set-tab").forEach(tab => tab.addEventListener("click", (e) => {
+  e.preventDefault();
+  document.querySelectorAll(".set-tab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".set-panel").forEach(p => p.style.display = "none");
+  tab.classList.add("active");
+  document.getElementById(`panel-${tab.dataset.tab}`).style.display = "block";
+}));
+document.getElementById("exportDataBtn")?.addEventListener("click", async () => {
+  const data = {
+    products: await LuxeDB.getProducts(), orders: await LuxeDB.getOrders(),
+    customers: await LuxeDB.getCustomers(), coupons: LS.get("luxe_coupons", [])
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "luxe-market-backup.json"; a.click();
+});
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!(await guardAdmin())) return;
+  renderAdminLayout("Settings");
+});
+</script>
+</body>
+</html>
