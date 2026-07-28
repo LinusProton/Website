@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LUXE MARKET — Premium Shopping, Delivered</title>
+<meta name="description" content="Shop electronics, fashion, beauty, home & living and more at LUXE MARKET."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body data-page="home">
+
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-area" id="main-area">
+    <div id="topbar-mount"></div>
+
+    <main class="content">
+
+      <!-- HERO SLIDER -->
+      <section class="section">
+        <div class="hero-slider" id="heroSlider">
+          <div class="hero-slide active" style="background-image:url('https://picsum.photos/seed/hero1/1400/700')">
+            <div class="hero-slide-inner">
+              <span class="eyebrow">New Season</span>
+              <h1>Considered pieces, <br/>made to be worn daily.</h1>
+              <p>Discover fashion, home and beauty edits curated for everyday premium living.</p>
+              <a href="shop.html" class="btn btn-gold">Shop the Edit</a>
+            </div>
+          </div>
+          <div class="hero-slide" style="background-image:url('https://picsum.photos/seed/hero2/1400/700')">
+            <div class="hero-slide-inner">
+              <span class="eyebrow">Today's Deals</span>
+              <h1>Up to 40% off <br/>selected electronics.</h1>
+              <p>Limited-time prices on headphones, watches and smart accessories.</p>
+              <a href="shop.html?deal=1" class="btn btn-gold">Shop Deals</a>
+            </div>
+          </div>
+          <div class="hero-slide" style="background-image:url('https://picsum.photos/seed/hero3/1400/700')">
+            <div class="hero-slide-inner">
+              <span class="eyebrow">Gifting</span>
+              <h1>Gifts that feel <br/>personal, not generic.</h1>
+              <p>Curated boxes and engraved keepsakes for every occasion.</p>
+              <a href="shop.html?category=gifts" class="btn btn-gold">Explore Gifts</a>
+            </div>
+          </div>
+          <button class="hero-arrow prev" id="heroPrev" aria-label="Previous slide">‹</button>
+          <button class="hero-arrow next" id="heroNext" aria-label="Next slide">›</button>
+          <div class="hero-dots" id="heroDots"></div>
+        </div>
+      </section>
+
+      <!-- FEATURED CATEGORIES -->
+      <section class="section">
+        <div class="section-head">
+          <div><span class="eyebrow">Browse</span><h2>Featured Categories</h2></div>
+          <a href="shop.html" class="link-more">View all →</a>
+        </div>
+        <div class="grid grid-6" id="catGrid"></div>
+      </section>
+
+      <!-- PROMO BANNERS -->
+      <section class="section grid grid-2">
+        <div class="promo-banner">
+          <div>
+            <span class="eyebrow" style="color:#e9f2ec;">Flash Sale</span>
+            <h3>Beauty essentials, up to 30% off</h3>
+            <p style="color:#dcefe4;">Ends in 3 days — while stocks last.</p>
+            <a href="shop.html?category=beauty" class="btn btn-outline-light btn-sm">Shop Beauty</a>
+          </div>
+        </div>
+        <div class="promo-banner alt">
+          <div>
+            <span class="eyebrow" style="color:var(--gold-light);">Loyalty Rewards</span>
+            <h3>Earn points on every order</h3>
+            <p style="color:var(--ivory-dim);">Join free and redeem points for discounts.</p>
+            <a href="register.html" class="btn btn-outline-light btn-sm">Join Now</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURED PRODUCTS -->
+      <section class="section">
+        <div class="section-head">
+          <div><span class="eyebrow">Curated</span><h2>Featured Products</h2></div>
+          <a href="shop.html" class="link-more">View all →</a>
+        </div>
+        <div class="grid grid-4" id="featuredGrid"></div>
+      </section>
+
+      <!-- NEW ARRIVALS -->
+      <section class="section">
+        <div class="section-head">
+          <div><span class="eyebrow">Just In</span><h2>New Arrivals</h2></div>
+          <a href="shop.html" class="link-more">View all →</a>
+        </div>
+        <div class="grid grid-4" id="newGrid"></div>
+      </section>
+
+      <!-- TODAY'S DEALS -->
+      <section class="section">
+        <div class="section-head">
+          <div><span class="eyebrow">Ends Soon</span><h2>Today's Deals</h2></div>
+          <a href="shop.html?deal=1" class="link-more">View all →</a>
+        </div>
+        <div class="grid grid-4" id="dealGrid"></div>
+      </section>
+
+      <!-- BEST SELLERS -->
+      <section class="section">
+        <div class="section-head">
+          <div><span class="eyebrow">Customer Favourites</span><h2>Best Sellers</h2></div>
+          <a href="shop.html" class="link-more">View all →</a>
+        </div>
+        <div class="grid grid-4" id="bestGrid"></div>
+      </section>
+
+      <!-- BRANDS -->
+      <section class="section">
+        <div class="section-head"><div><span class="eyebrow">Trusted</span><h2>Shop by Brand</h2></div></div>
+        <div class="grid grid-6" id="brandGrid"></div>
+      </section>
+
+      <!-- REVIEWS -->
+      <section class="section">
+        <div class="section-head"><div><span class="eyebrow">Testimonials</span><h2>What Customers Say</h2></div></div>
+        <div class="grid grid-3">
+          <div class="info-card"><div class="stars">★★★★★</div><p>"Exceeded expectations — quality feels genuinely premium and shipping was fast, even to Mombasa."</p><strong>— Amina W.</strong></div>
+          <div class="info-card"><div class="stars">★★★★★</div><p>"My go-to for gifts now. Packaging alone feels like a present, and returns were painless."</p><strong>— James K.</strong></div>
+          <div class="info-card"><div class="stars">★★★★☆</div><p>"Great value and the M-Pesa checkout took seconds. Will definitely reorder."</p><strong>— Grace N.</strong></div>
+        </div>
+      </section>
+
+      <!-- SOCIAL FEED -->
+      <section class="section">
+        <div class="section-head"><div><span class="eyebrow">#LuxeMarketStyle</span><h2>Follow Us on Instagram</h2></div></div>
+        <div class="grid grid-6" id="socialGrid"></div>
+      </section>
+
+      <!-- NEWSLETTER -->
+      <section class="section">
+        <div class="promo-banner alt" style="justify-content:center;text-align:center;flex-direction:column;">
+          <span class="eyebrow" style="color:var(--gold-light);justify-content:center;">Newsletter</span>
+          <h3>Get 10% off your first order</h3>
+          <p style="color:var(--ivory-dim);max-width:420px;">Sign up for restock alerts, early sale access and styling tips.</p>
+          <div class="newsletter-mini" style="max-width:380px;width:100%;">
+            <input type="email" placeholder="Enter your email" id="heroNewsletterEmail"/>
+            <button id="heroNewsletterBtn">Subscribe</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+    <div id="footer-mount"></div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/render.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
